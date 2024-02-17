@@ -8,16 +8,21 @@ import matplotlib.pyplot as plt
 
 # 创建一个数据集实例
 test_data = SequenceData('./data/test')
-
 test_data_loader = DataLoader(test_data, batch_size=100)
 
+model_type = "LSTM"
+
 # 创建模型实例并设置在GPU上运行
-# model = LSTM(1, 1024).cuda()
-model = TransformerModel(1, 1024, 1, 1).cuda()
+if model_type == "LSTM":
+    model = LSTM(512).cuda()
+elif model_type == "GPT":
+    model = TransformerModel(hidden_size=128, nhead=16).cuda()
 
 # 加载模型
-# model.load_state_dict(torch.load('./exp/LSTM/model.pt'))
-model.load_state_dict(torch.load('./exp/GPT/model.pt'))
+if model_type == "LSTM":
+    model.load_state_dict(torch.load('./exp/LSTM/model.pt'))
+elif model_type == "GPT":
+    model.load_state_dict(torch.load('./exp/GPT/model.pt'))
 
 # 开始测试
 model.eval()
